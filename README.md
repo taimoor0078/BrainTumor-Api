@@ -2,8 +2,6 @@
 
 > **BRISC** (BRain tumor Image Segmentation & Classification) — a curated, expert-annotated T1 MRI dataset for multi-class brain tumor classification and pixel-wise segmentation.
 
-[ArXiv preprint (Fateh et al., 2025)](https://arxiv.org/abs/2506.14318)
-
 ---
 
 ##  Overview
