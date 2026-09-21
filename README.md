@@ -1,121 +1,112 @@
-# NeuroX Files
+# BRISC 2025 — Brain Tumor MRI Dataset
 
-AI-powered FastAPI backend that accepts a Brain Tumour MRI radiology report PDF and returns
-structured information extracted from the report, alongside a
-## Folder Structure
+> **BRISC** (BRain tumor Image Segmentation & Classification) — a curated, expert-annotated T1 MRI dataset for multi-class brain tumor classification and pixel-wise segmentation.
 
-## 1. Create a Virtual Environment
+[ArXiv preprint (Fateh et al., 2025)](https://arxiv.org/abs/2506.14318)
 
-```bash
-python3.11 -m venv venv
-```
+---
 
-Activate it:
+## 🚀 Overview
 
-- macOS / Linux:
-  ```bash
-  source venv/bin/activate
-  ```
-- Windows:
-  ```bash
-  venv\Scripts\activate
-  ```
+BRISC is designed to address common shortcomings in existing public brain MRI collections (e.g., class imbalance, limited tumor types, and annotation inconsistency). It provides high-quality, physician-validated pixel-level masks and a balanced multi-class classification split, suitable for benchmarking segmentation and classification algorithms as well as multi-task learning research.
 
-## 2. Install Dependencies
+**Highlights**
+- 6,000 T1-weighted MRI slices (5,000 train / 1,000 test)
+- Four classes: **Glioma**, **Meningioma**, **Pituitary Tumor**, **No Tumor**
+- Pixel-wise segmentation masks reviewed by radiologists
+- Slices from three anatomical planes: **Axial**, **Coronal**, **Sagittal**
+- Clean, stratified train/test splits and aligned image–mask filenames
 
-```bash
-pip install -r requirements.txt
-```
+---
 
-The first run will download `emilyalsentzer/Bio_ClinicalBERT` from
-Hugging Face (requires internet access on first launch; cached afterwards).
-
-## 3. Run the Server
-
-```bash
-uvicorn app.main:app --reload
-```
-
-The server starts at: `http://127.0.0.1:8000`
-
-## 4. Swagger UI
-
-Interactive API docs (auto-generated):
+## 📦 Dataset structure
 
 ```
-http://127.0.0.1:8000/docs
+BRISC2025/
+├─ classification_task/
+│  ├─ glioma/
+│  │  ├─ brisc2025_train_00001_gl_ax_t1.jpg
+│  │  └─ ...
+│  ├─ meningioma/
+│  ├─ pituitary/
+│  └─ no_tumor/
+├─ segmentation_task/
+│  ├─ images/
+│  │  ├─ brisc2025_train_00001_gl_ax_t1.jpg
+│  │  └─ ...
+│  └─ masks/
+│     ├─ brisc2025_train_00001_gl_ax_t1.png
+│     └─ ...
+├─ manifest.json
+├─ manifest.csv
+├─ manifest.json.sha256
+├─ manifest.csv.sha256
+└─ README.md
 ```
 
-Alternative ReDoc UI:
+**Notes:**
+- Classification folders contain image-level labels suitable for standard image classification pipelines.
+- Segmentation folders contain paired MRI `images/` and corresponding binary `masks/`.
+- Image and mask filenames are identical except for file extension (images: `.jpg`, masks: `.png`).
+- All images are T1-weighted slices.
+
+---
+
+## 🏷 File naming convention
+
+Filenames follow a consistent pattern to make parsing straightforward:
 
 ```
-http://127.0.0.1:8000/redoc
+brisc2025_<split>_<index>_<tumor>_<view>_<sequence>.<ext>
 ```
 
-## 5. Endpoints
+- `prefix` — `brisc2025`
+- `split` — `train` or `test`
+- `index` — zero-padded image number (e.g. `00010`)
+- `tumor` — `gl` (glioma), `me` (meningioma), `pi` (pituitary), `nt` (no tumor)
+- `view` — `ax` (axial), `co` (coronal), `sa` (sagittal)
+- `sequence` — `t1` (T1-weighted)
 
-| Method | Path       | Description                          |
-|--------|-----------|---------------------------------------|
-| GET    | `/`       | Health/info check                     |
-| GET    | `/health` | Simple health check                   |
-| POST   | `/predict`| Upload a radiology report PDF         |
+**Example image filename:** `brisc2025_test_00010_gl_ax_t1.jpg`  
+**Corresponding mask filename:** `brisc2025_test_00010_gl_ax_t1.png` (same basename, different extension)
 
-## 6. Postman Example
+---
 
-**Request**
+## 📊 Dataset statistics
 
-- Method: `POST`
-- URL: `http://127.0.0.1:8000/predict`
-- Body type: `form-data`
-- Key: `file` (type: File) → select a `.pdf` radiology report
+- **Total samples:** 6,000 (5,000 train / 1,000 test)
+- **Classes:** 4 (balanced distribution across train/test)
+- **Planes:** Axial / Coronal / Sagittal (balanced representation)
+- **Imaging modality:** T1-weighted MRI
+- **Annotation quality:** Reviewed and corrected by medical experts
 
-**cURL equivalent**
+---
 
-```bash
-curl -X POST "http://127.0.0.1:8000/predict" \
-  -H "accept: application/json" \
-  -H "Content-Type: multipart/form-data" \
-  -F "file=@report.pdf"
-```
+## 📄 Citation
 
-**Sample Response**
+If you use BRISC in your work, please cite:
 
-```json
-{
-  "success": true,
-  "report_text": "...",
-  "clinicalbert_embedding_dimension": 768,
-  "extracted_features": {
-    "Tumor Type": "glioblastoma multiforme",
-    "Tumor Size": "4.2 x 3.5 cm",
-    "Tumor Location": "left frontal lobe",
-    "Edema": "moderate perilesional edema",
-    "Midline Shift": "midline shift of 5 mm",
-    "Contrast Enhancement": "heterogeneous enhancement",
-    "Necrosis": "central necrosis",
-    "Mass Effect": "moderate mass effect",
-    "Radiologist Impression": "Findings consistent with high-grade glioma..."
-  }
+```bibtex
+@article{fateh2025brisc,
+  title={Brisc: Annotated dataset for brain tumor segmentation and classification with swin-hafnet},
+  author={Fateh, Amirreza and Rezvani, Yasin and Moayedi, Sara and Rezvani, Sadjad and Fateh, Fatemeh and Fateh, Mansoor and Abolghasemi, Vahid},
+  journal={arXiv preprint arXiv:2506.14318},
+  year={2025}
 }
 ```
 
-## 7. Error Handling
+---
 
-| Scenario            | HTTP Status | Response                                             |
-|----------------------|-------------|-------------------------------------------------------|
-| No file uploaded     | 422/400     | `{"success": false, "error": "..."}`                  |
-| Non-PDF file         | 400         | `{"success": false, "error": "Unsupported file type"}`|
-| Empty PDF            | 422         | `{"success": false, "error": "PDF has no pages / empty content"}` |
-| Corrupted PDF        | 422         | `{"success": false, "error": "Unable to open PDF..."}`|
-| Unexpected error     | 500         | `{"success": false, "error": "Internal server error..."}` |
+## 🤝 Acknowledgments
 
-## Notes on Extraction Logic
+Thanks to the collaborating radiologists and physicians for expert annotation and review.
 
-- `clinicalbert_embedding_dimension` reflects the actual embedding size
-  returned by the loaded ClinicalBERT model (768 for `Bio_ClinicalBERT`).
-- Structured fields are extracted using regex/keyword rules applied to the
-  cleaned report text. ClinicalBERT embeddings are computed over the full
-  document (chunked and averaged for long reports) and returned for
-  downstream use (e.g. similarity search, classification models you train
-  separately). Fields not found in the text are returned as `null` —
-  no values are fabricated.
+---
+
+## 🔗 References & inspirations
+
+This dataset drew design and organizational inspiration from widely used brain tumor imaging datasets (e.g., BraTS, Figshare datasets, Kaggle collections). See the project paper for full details and evaluation results.
+
+---
+
+
