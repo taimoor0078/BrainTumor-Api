@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Overview
+##  Overview
 
 BRISC is designed to address common shortcomings in existing public brain MRI collections (e.g., class imbalance, limited tumor types, and annotation inconsistency). It provides high-quality, physician-validated pixel-level masks and a balanced multi-class classification split, suitable for benchmarking segmentation and classification algorithms as well as multi-task learning research.
 
@@ -19,7 +19,7 @@ BRISC is designed to address common shortcomings in existing public brain MRI co
 
 ---
 
-## 📦 Dataset structure
+## Dataset structure
 
 ```
 BRISC2025/
@@ -52,7 +52,7 @@ BRISC2025/
 
 ---
 
-## 🏷 File naming convention
+## File naming convention
 
 Filenames follow a consistent pattern to make parsing straightforward:
 
@@ -72,7 +72,7 @@ brisc2025_<split>_<index>_<tumor>_<view>_<sequence>.<ext>
 
 ---
 
-## 📊 Dataset statistics
+## Dataset statistics
 
 - **Total samples:** 6,000 (5,000 train / 1,000 test)
 - **Classes:** 4 (balanced distribution across train/test)
@@ -82,7 +82,7 @@ brisc2025_<split>_<index>_<tumor>_<view>_<sequence>.<ext>
 
 ---
 
-## 📄 Citation
+##  Citation
 
 If you use BRISC in your work, please cite:
 
@@ -97,13 +97,13 @@ If you use BRISC in your work, please cite:
 
 ---
 
-## 🤝 Acknowledgments
+##  Acknowledgments
 
 Thanks to the collaborating radiologists and physicians for expert annotation and review.
 
 ---
 
-## 🔗 References & inspirations
+##  References & inspirations
 
 This dataset drew design and organizational inspiration from widely used brain tumor imaging datasets (e.g., BraTS, Figshare datasets, Kaggle collections). See the project paper for full details and evaluation results.
 
